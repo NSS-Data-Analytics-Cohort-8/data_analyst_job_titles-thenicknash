@@ -36,7 +36,20 @@ where (
 
 -- 4. How many postings in Tennessee have a star rating above 4?
 
+select count(*) as job_postings_in_tn_above_4_stars
+from data_analyst_jobs
+where location = 'TN'
+and star_rating > 4;
+
+-- There are 3 job postings in Tennessee that have a star rating above 4.
+
 -- 5. How many postings in the dataset have a review count between 500 and 1000?
+
+select count(*) as number_of_postings
+from data_analyst_jobs
+where review_count between 500 and 1000;
+
+-- There 151 postings.
 
 -- 6. Show the average star rating for companies in each state. The output should show the state as state and the average rating for the state as avg_rating. Which state shows the highest average rating?
 
