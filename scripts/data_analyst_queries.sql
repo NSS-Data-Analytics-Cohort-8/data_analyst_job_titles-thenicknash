@@ -53,7 +53,19 @@ where review_count between 500 and 1000;
 
 -- 6. Show the average star rating for companies in each state. The output should show the state as state and the average rating for the state as avg_rating. Which state shows the highest average rating?
 
+select location as state, avg(star_rating) as avg_rating
+from data_analyst_jobs
+group by state
+order by avg_rating desc;
+
+-- NE (Nebraska) has the highest average rating.
+
 -- 7. Select unique job titles from the data_analyst_jobs table. How many are there?
+
+select count(distinct title) as unique_job_titles
+from data_analyst_jobs;
+
+-- There are 881 unique job titles.
 
 -- 8. How many unique job titles are there for California companies?
 
