@@ -131,3 +131,60 @@ order by number_of_jobs desc;
 -- Which three industries are in the top 4 on this list? How many jobs have been listed for more than 3 weeks for each of the top 4?
 
 -- The four industries in the top 4 are Internet and Software (62 jobs), Banks and Financial Services (61 jobs), Consulting and Business Services (57 jobs), and Health Care (6522 jobs).
+
+
+-- Amanda Questions
+
+-- 1. For each company, give the company name and the difference between its star rating and the national average star rating.
+
+-- NOTE: I am excluding records where the company name is null and where there is not at least 1 star rating
+select
+	company,
+	avg(star_rating) as company_avg_rating,
+	(avg(star_rating) - (
+		select avg(star_rating) 
+		from data_analyst_jobs
+	)) as diff_between_company_and_natl_avg_rating,
+	(
+		select avg(star_rating) 
+		from data_analyst_jobs
+	) as national_avg_rating
+from data_analyst_jobs
+where star_rating is not null
+and company is not null
+group by company;
+
+-- 2. Using a correlated subquery: For each company, give the company name, its domain, its star rating, and its domain average star rating
+
+select
+	distinct daj.company,
+	daj.domain,
+	daj.star_rating as company_rating,
+	(
+		select avg(daj_2.star_rating)
+		from data_analyst_jobs as daj_2
+		where daj_2.domain = daj.domain
+	) as domain_avg_rating
+from data_analyst_jobs as daj
+where daj.domain is not null
+and daj.star_rating is not null;
+
+-- 3. Repeat question 2 using a CTE instead of a correlated subquery
+
+with cte_domain_avg_rating as (
+	select
+		domain,
+		avg(star_rating) as domain_avg_rating
+	from data_analyst_jobs
+	group by domain
+)
+select
+	distinct daj.company,
+	daj.domain,
+	daj.star_rating as company_rating,
+	cte_domain_avg_rating.domain_avg_rating
+from data_analyst_jobs as daj
+inner join cte_domain_avg_rating
+on daj.domain = cte_domain_avg_rating.domain
+where daj.domain is not null
+and daj.star_rating is not null;
