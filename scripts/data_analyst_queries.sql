@@ -55,6 +55,7 @@ where review_count between 500 and 1000;
 
 select location as state, avg(star_rating) as avg_rating
 from data_analyst_jobs
+where location is not null
 group by state
 order by avg_rating desc;
 
@@ -80,15 +81,17 @@ where location = 'CA';
 select company, avg(star_rating) as avg_rating
 from data_analyst_jobs
 where review_count > 5000
+and company is not null
 group by company;
 
--- There are 41 (including 1 null entry) companies that have more than 5000 reviews.
+-- There are 40 (excluding 1 null entry) companies that have more than 5000 reviews.
 
 -- 10. Add the code to order the query in #9 from highest to lowest average star rating. Which company with more than 5000 reviews across all locations in the dataset has the highest star rating? What is that rating?
 
 select company, avg(star_rating) as avg_rating
 from data_analyst_jobs
 where review_count > 5000
+and company is not null
 group by company
 order by avg_rating desc;
 
@@ -115,6 +118,16 @@ where (
 
 -- BONUS: You want to understand which jobs requiring SQL are hard to fill. Find the number of jobs by industry (domain) that require SQL and have been posted longer than 3 weeks.
 
+select domain as industry, count(*) as number_of_jobs
+from data_analyst_jobs
+where lower(skill) like '%sql%'
+and days_since_posting > 21
+and domain is not null
+group by industry
+order by number_of_jobs desc;
+
 -- Disregard any postings where the domain is NULL.
 -- Order your results so that the domain with the greatest number of hard to fill jobs is at the top.
 -- Which three industries are in the top 4 on this list? How many jobs have been listed for more than 3 weeks for each of the top 4?
+
+-- The four industries in the top 4 are Internet and Software (62 jobs), Banks and Financial Services (61 jobs), Consulting and Business Services (57 jobs), and Health Care (6522 jobs).
